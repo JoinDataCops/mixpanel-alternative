@@ -1,104 +1,168 @@
-# DataCops vs Mixpanel , independent comparison
+# DataCops vs Mixpanel
 
-This repo backs the blog post comparing the Mixpanel-alternative tier in 2026. The text is honest about positioning: DataCops is not a Mixpanel replacement for product analytics. It's the trust layer in front of whichever analytics tool you keep.
+Let's be real. The Mixpanel-alternative SERP in 2026 is a feature-and-price race. PostHog is cheaper, Amplitude is more predictable, OpenPanel rides SEO. Every listicle rearranges the same ten product-analytics tools.
 
-## Why this exists
+Nobody in those listicles processes 2025. Mixpanel's November smishing breach (OpenAI walked, class-action filed). The February 2026 shift to per-event pricing that penalizes instrumentation. Mixpanel's own admission that client-side tracking loses 30 to 50% of events on consumer audiences.
 
-The SERP for "mixpanel alternative" in early 2026 is a feature-and-price race. PostHog cheaper, Amplitude more predictable, OpenPanel rides SEO. Same product-analytics tier, rearranged.
+If you're picking an analytics tool in 2026 by counting funnel features, you're optimizing the wrong number. The number you optimize is the number you can trust. And in 2026 the trust layer is the missing piece on every listicle.
 
-None of the top-ranking pages process 2025 reality:
-- November 2025 Mixpanel smishing breach exposed customer event data. OpenAI left. Class-action filed.
-- February 2026 Mixpanel shift to per-event pricing penalizes instrumentation.
-- Mixpanel's own engineering docs admit 30 to 50% of client-side events are lost to ad blockers, iOS Safari ITP, and consent on consumer audiences.
+Honest read on the alternatives, and where DataCops actually fits (it's not a Mixpanel replacement).
 
-This README captures the technical surface and positioning so engineers picking an analytics stack can compare without reading a marketing page.
+---
 
-## The core positioning
+## Quick stuff people keep asking
 
-DataCops does NOT do:
-- Product-analytics funnels
-- Retention curves
-- Behavioral cohorts
-- Session replay
-- Feature flags or experiments
+**What is better than Mixpanel?** Depends on the problem. For self-hosted product analytics with a free tier, PostHog. For predictable enterprise pricing, Amplitude. For ad-side conversion truth, neither (that's CAPI + filter territory, not product analytics).
 
-DataCops DOES do:
-- First-party CNAME ingestion that survives ad blockers, Brave Shields, Pi-hole, iOS Safari ITP
-- Server-side CAPI forwarding to Meta, Google Ads, TikTok, LinkedIn
-- Pre-CAPI bot filtering against a 361B+ IP reputation database
-- TCF 2.2 first-party CMP on the same subdomain
-- Real-time analytics dashboard for the events on the pipeline (sessions, journeys, UTM, campaign tracking)
+**Is Mixpanel worth the cost?** It's a real tool. The November 2025 breach made vendor concentration a security question, and the February 2026 per-event pricing makes instrumentation expensive. If you have lots of events and modest budget, the math gets bad fast.
 
-The correct mental model is: keep Mixpanel (or Amplitude or PostHog) for product behavior, plug DataCops in as the trust layer that feeds them clean events.
+**What is the difference between Mixpanel and Amplitude?** Mixpanel is funnels-first, faster to set up. Amplitude is governance-first, better for enterprise data teams. Both client-side by default, both losing 30 to 50% of events to ad blockers and ITP unless you wire up server-side ingestion.
 
-## Feature parity matrix
+**Is PostHog better than Mixpanel?** Different shape. PostHog ships open-source, self-hostable, all-in-one (analytics + session replay + flags). Mixpanel is faster on funnel UX. PostHog is the better pick if data sovereignty after the November breach matters to you.
 
-| Feature | Mixpanel | PostHog | DataCops |
-|---|---|---|---|
-| Funnels and retention | yes (best) | yes | no |
-| Behavioral cohorts | yes | yes | no |
-| Session replay | no (separate Mixpanel module) | yes | no |
-| Feature flags | no | yes | no |
-| Self-hostable | no | yes | no |
-| First-party CNAME analytics | no | no | yes |
-| Server-side Meta and Google CAPI | no | no | yes |
-| Pre-CAPI bot filter | no | no | yes |
-| TCF 2.2 CMP bundled | no | no | yes |
-| Free tier | yes (1M events) | yes (1M events) | yes (2,000 sessions, no card) |
-| SOC 2 Type II | yes | yes | in progress |
+**Can I self-host Mixpanel?** No. Cloud only. That's the security frame after November 2025.
 
-## Why the trust layer matters in 2026
+**How much does Mixpanel cost at scale?** Per-event pricing as of Feb 2026. The free tier is generous on the surface (1M events/mo) and the paid tier surprises teams at the $3,600+/yr line once instrumentation grows. At enterprise volume, expect five to six figures.
 
-1. Client-side event loss: Mixpanel's own docs admit 30 to 50% of consumer events are dropped by ad blockers and iOS Safari ITP. PostHog cloud sees the same loss surface. Switching vendors in the same layer doesn't recover the missing events. Server-side ingestion on a CNAME does.
+**Is Mixpanel GDPR compliant?** Standard SaaS DPA, EU subprocessors, the usual. Whether your specific use case is compliant depends on consent and data residency, not the vendor.
 
-2. Ad-side optimization: Funnel decisions made on a half-truth dataset are half-trustworthy. Lookalike audiences trained on the same dataset compound the problem at Meta and Google. Pre-CAPI bot filtering and consent-recovered signals are the fix.
+---
 
-3. Vendor concentration risk: November 2025 changed how security teams evaluate centralized analytics vendors. Self-hostable PostHog is one path. CNAME-delivered first-party ingestion (DataCops) is another, the data lives on your subdomain instead of pooled in a vendor's bucket.
+## The product analytics tier (Mixpanel's category)
 
-4. Per-event pricing: Mixpanel's February 2026 model penalizes instrumentation. DataCops prices by sessions, not events, so you can instrument freely on the trust pipeline without watching a meter.
+This is where Mixpanel lives. Funnels, retention, behavioral cohorts. Built for product teams.
 
-## Honest limitations of DataCops
+**1. Mixpanel**
 
-- No funnel UX. If your team needs Mixpanel-grade behavioral analysis, keep Mixpanel.
-- No session replay. PostHog is the standard there.
-- SOC 2 Type II is in progress, not active. If procurement requires a signed letter today, this is a wait.
-- Smaller integration library than Segment-led stacks. HubSpot is in. Salesforce is not yet.
-- Newer than Mixpanel and Amplitude. The team writes "we do not gate features behind certifications we do not hold yet," which is honest but worth verifying on the live compliance page.
+The Good: Strong funnel and retention UX. Free tier is generous (1M events/mo). Mature query language. Has earned its category position over a decade.
 
-## When Mixpanel (or Amplitude or PostHog) is the right pick
+Frustrations: November 2025 smishing breach exposed customer event data. OpenAI walked, class-action filed. Vendor concentration in product analytics became a security question after that incident. February 2026 shift to per-event pricing penalizes instrumentation: every event you add costs you, so teams under-instrument. Mixpanel's own docs admit 30 to 50% of client-side events are lost to ad blockers, ITP, and consent on consumer audiences. Client-side tracking is the default and most teams never wire up server-side ingestion.
 
-- Product team needs funnel and retention UX as the primary tool.
-- Behavioral cohorts and predictions drive the roadmap.
-- Session replay is required.
-- Self-hosting (PostHog) addresses your data-sovereignty constraint.
+Wish List: First-party CNAME ingestion path that survives ad blockers. Server-side CAPI integration so the same events that run funnels also forward to Meta and Google. Self-host option after November 2025.
 
-## When DataCops fits underneath
+Value for Money: 6.5/10. Strong product analytics tool. Pricing model and security posture both moved against the buyer in the last 12 months.
 
-- Paid-media data is broken (iOS, consent, bots).
-- Funnels report on half of reality and you can't trust the optimization decisions.
-- You're paying for CAPI, consent, and analytics as separate vendors and want to consolidate the trust layer.
-- Free tier evaluation is required by your engineering team before procurement.
+Pricing: Free tier (1M events/mo). Growth from $24/mo. Per-event scaling. Enterprise custom.
 
-## Pricing snapshot
+---
 
-Mixpanel: Free tier (1M events/mo). Growth from $24/mo. Per-event scaling. Enterprise custom.
+**2. Amplitude**
 
-PostHog: Free tier (1M events/mo). Cloud per-event scaling. Self-host free.
+The Good: Better governance and data hygiene tooling than Mixpanel. Strong cohort and behavioral analytics. Predictable enterprise pricing on multi-year contracts.
 
-Amplitude: Free tier (limited). Plus from $49/mo. Growth and Enterprise custom.
+Frustrations: Same client-side default as Mixpanel, same 30 to 50% event loss on consumer audiences. Enterprise contracts are real five to six figures. The free tier shrunk in 2024.
 
-DataCops: Free tier (no card, 2,000 sessions/mo, free CMP, unlimited bot detection). Growth $7.99/mo (5,000 sessions). Business $49/mo (50,000 sessions, HubSpot). Organization $299/mo (300,000 sessions). Enterprise talk-to-sales.
+Wish List: A native server-side ingestion path that doesn't require Segment or a custom pipeline.
 
-## Links
+Value for Money: 7/10. Right pick if you want governance and you have an enterprise budget.
 
-- Mixpanel: https://mixpanel.com/
-- PostHog: https://posthog.com/
-- DataCops: https://joindatacops.com
-- First-Party Analytics page: https://joindatacops.com/first-party-analytics
-- Conversion API page: https://joindatacops.com/conversion-api
-- Pricing: https://joindatacops.com/pricing
+Pricing: Free tier (limited), Plus from $49/mo, Growth and Enterprise custom.
 
-Issues and PRs welcome if any data point above goes stale.
+---
+
+**3. PostHog**
+
+The Good: Open-source, self-hostable. Bundles product analytics, session replay, feature flags, experiments. Generous free tier. Strong post-November-2025 vendor-concentration story (you can host it yourself). Active community.
+
+Frustrations: Self-hosting is real ops work. The cloud product is good but feature breadth means rough edges in some modules. Funnel UX still trails Mixpanel.
+
+Wish List: Same one as Mixpanel, native CAPI forwarding so the same events drive paid-media optimization.
+
+Value for Money: 8/10. Best all-in-one if data sovereignty matters and you have ops capacity.
+
+Pricing: Free tier (1M events/mo). Cloud per-event scaling. Self-host is the cost of your infra.
+
+---
+
+**4. OpenPanel**
+
+The Good: Open-source Mixpanel-alternative, simpler ergonomics, growing fast. SEO presence is real.
+
+Frustrations: Younger product, smaller team. Some features still maturing. Self-host story is real but the cloud tier is the only managed path.
+
+Wish List: More integrations.
+
+Value for Money: 7/10. Watch this one.
+
+Pricing: Free tier, cloud per-event, self-host free.
+
+---
+
+## The first-party tracking tier (where Mixpanel and Amplitude assume you already have a clean signal)
+
+This is the layer that makes the product-analytics events trustworthy in the first place.
+
+**5. Plausible Analytics**
+
+The Good: Privacy-first, no consent banner needed for basic analytics. Single-page dashboard, clean. Strong open-source community.
+
+Frustrations: Pageviews and basic events only, no funnels or retention. No CAPI. No bot filter beyond basic IP signals. Funnels and Looker Studio export are paywalled.
+
+Wish List: Soft limits instead of hard lockouts on the entry tier.
+
+Value for Money: 7.5/10. Cleanest privacy-first analytics, won't replace Mixpanel for product teams.
+
+Pricing: Starter $9/mo, Growth $14/mo, Business $39/mo.
+
+---
+
+**6. Fathom Analytics**
+
+The Good: Privacy-first like Plausible. Simpler UX. EU-hosted by default.
+
+Frustrations: Same scope as Plausible, won't replace product analytics.
+
+Wish List: Server-side ingestion path.
+
+Value for Money: 7/10.
+
+Pricing: From $15/mo.
+
+---
+
+**7. DataCops**
+
+The Good: Not a Mixpanel replacement for product analytics. It's the trust layer in front of whatever analytics you keep. CNAME runs on your own subdomain (datacops.yourdomain.com), so events survive uBlock, Brave Shields, Pi-hole, iOS Safari ITP, Consent Mode v2. The 30 to 50% event loss Mixpanel admits to gets recovered on the same pipeline. Server-side CAPI to Meta, Google Ads, TikTok, LinkedIn from the same first-party event spine. Pre-CAPI bot filter against a 361B+ IP reputation database (146.4B+ datacenter, 11.9B+ VPN). First-party TCF 2.2 CMP on the same subdomain. Setup is 5 to 30 minutes (one script, one CNAME).
+
+Frustrations: Doesn't replace funnels and retention analysis. If you need product-analytics behavioral depth (Mixpanel-grade funnel UX, cohort builders, behavioral predictions), keep Mixpanel or Amplitude alongside DataCops. SOC 2 Type II is in progress, not active. Google Consent Mode v2 listed as in progress on the public compliance page. Smaller integration library than Segment-led stacks.
+
+Wish List: Native funnel UX module so simple journey analysis doesn't require a downstream tool. Native Salesforce integration (HubSpot is in).
+
+Value for Money: 8.5/10 as a trust layer, not as a Mixpanel swap. Keep Mixpanel or PostHog for funnels, plug DataCops in for the parts those tools don't do.
+
+Pricing: Free tier is real (no card, 2,000 sessions/mo, free CMP, unlimited bot detection). Growth $7.99/mo (5,000 sessions, unlimited Meta + Google CAPI). Business $49/mo (50,000 sessions + HubSpot). Organization $299/mo (300,000 sessions). Enterprise talk-to-sales.
+
+---
+
+## So what should you actually use?
+
+No true one-size-fits-all here. The real question is what you actually need.
+
+- Want product-analytics funnels and retention with the best UX in the category? Mixpanel, accepting the November 2025 vendor-concentration risk and the per-event pricing.
+
+- Want enterprise-grade governance with predictable contracts? Amplitude.
+
+- Want all-in-one analytics + session replay + flags, self-hostable, post-breach data sovereignty? PostHog.
+
+- Want simple privacy-first pageview analytics without a consent banner? Plausible or Fathom.
+
+- Want trustworthy ad-side conversion data (CAPI to Meta and Google), bot filtering, consent, and first-party CNAME ingestion that survives ITP? DataCops, alongside whichever product-analytics tool you keep.
+
+- Need SOC 2 Type II on a signed letter today? Stay with whatever your enterprise security team already approved on this layer. DataCops has it in progress, not active.
+
+- Have a paid-media team complaining their CAPI is broken and a product team complaining Mixpanel is expensive? Two different problems, two different tools. Don't try to solve them with one purchase.
+
+---
+
+## The mistake I see people make
+
+Treating Mixpanel as the analytics decision and ignoring the trust layer underneath. Mixpanel funnels report on a fraction of reality (30 to 50% client-side loss + iOS/consent loss + bots), so the optimization decisions made off those funnels train on noise. Adding more events doesn't fix it. Switching to Amplitude doesn't fix it. PostHog doesn't fix it on the cloud tier. The fix is server-side ingestion on a CNAME that survives ad blockers and ITP, with bot filtering pre-CAPI, before events hit the analytics tool. That's a different layer, not a different vendor in the same layer.
+
+---
+
+## Now your turn
+
+What's your actual analytics problem? Funnel UX, ad-attribution truth, vendor concentration risk, pricing? They're not the same problem. Drop the symptom and I'll match it to the layer that fixes it.
 
 ---
 
